@@ -1,8 +1,12 @@
 #!/bin/bash
 set -x
 assets=""
-REL=latest
-BRANCH=master
+echo "Usage ./create_release.sh <branch> <release_name>"
+REL=$2
+BRANCH=$1
+if [ $BRANCH = "eng" ]; then
+    BRANCH="master"
+fi
 git tag -d $REL
 git tag $REL
 git push -f origin $REL
@@ -16,5 +20,5 @@ rm -rf dist
 rm -rf avisdk.egg-info
 assets="$assets -a avisdk-$BRANCH.tar.gz#pip-package-$BRANCH"
 cd ../
-/usr/local/bin/hub release edit $assets -F ReleaseNote $REL
+/usr/local/bin/hub release create $assets -F ReleaseNote $REL
 rm avisdk-$BRANCH.tar.gz
